@@ -4,23 +4,25 @@ import LoginImage from "../../../public/login-image.svg";
 import GoogleIcon from "../../../public/google-icon.svg";
 import Button from "@/components/button";
 import { Mail } from "lucide-react";
+import Link from "next/link";
 
-export default function Login() {
+export default async function LoginPage() {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 w-screen h-screen">
       {/* Esquerda */}
       <div className="flex flex-col items-center gap-90 mt-30">
         <Image src={Logo} alt="SCEO Logo" className="w-100 sm:w-200" />
-        <div className="flex flex-col items-center gap-10 xl:items-start">
-          <h1 className="font-bold text-6xl">Entrar</h1>
-          <Button>
-            <Image src={GoogleIcon} alt="Icone do Google" />
-            Entrar com Google
-          </Button>
-          <Button>
-            <Mail />
-            Entrar com E-mail
-          </Button>
+        <div className="flex flex-col gap-10 items-center xl:items-start">
+          <h1 className="font-bold text4-5xl">Faça login ou cadastre-se</h1>
+          <Link href={"/sign-in"}>
+            <Button>
+              <Mail />
+              <Image src={GoogleIcon} alt="Icone do Google" />
+            </Button>
+          </Link>
+          <Link href={"/create-account"}>
+            <Button>Criar conta</Button>
+          </Link>
         </div>
       </div>
 

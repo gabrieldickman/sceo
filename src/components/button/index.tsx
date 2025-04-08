@@ -11,10 +11,13 @@ export default function Button({
   children,
   icon,
   onClick,
-  className,
+  className = "",
 }: ButtonProps) {
   return (
-    <button className="bg-[var(--black-secondary)] rounded-md hover:bg-[var(--gray-dark)] cursor-pointer sm:w-150 p-5  flex flex-row items-center justify-center gap-5">
+    <button
+      onClick={onClick}
+      className={`bg-[var(--black-secondary)] rounded-md hover:bg-[var(--gray-dark)] cursor-pointer sm:w-150 p-5 flex flex-row items-center justify-center gap-5 ${className}`}
+    >
       {icon}
       {children}
     </button>
