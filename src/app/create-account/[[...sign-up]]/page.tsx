@@ -1,4 +1,4 @@
-import Button from "@/components/button";
+import { Button } from "@/components/ui/button";
 import { SignUp } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
@@ -16,7 +16,7 @@ export default async function CreateAccountPage() {
       <div className="flex flex-col gap-5 items-center">
         <SignUp />
         <Link href={"/login"}>
-          <Button>Voltar</Button>
+          <Button className="w-50 sm:w-150 h-20 text-2xl cursor-pointer hover:bg-[var(--gray-dark)]">Voltar</Button>
         </Link>
       </div>
     </div>

@@ -2,9 +2,8 @@ import Image from "next/image";
 import Logo from "../../../public/logo.svg";
 import LoginImage from "../../../public/login-image.svg";
 import GoogleIcon from "../../../public/google-icon.svg";
-import Button from "@/components/button";
-import { Mail } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default async function LoginPage() {
   return (
@@ -15,13 +14,14 @@ export default async function LoginPage() {
         <div className="flex flex-col gap-10 items-center xl:items-start">
           <h1 className="font-bold text4-5xl">Faça login ou cadastre-se</h1>
           <Link href={"/sign-in"}>
-            <Button>
-              <Mail />
+            <Button className="bg-[var(--black-secondary)] rounded-md hover:bg-[var(--gray-dark)] cursor-pointer text-2xl sm:w-150 h-20 p-5 flex flex-row items-center justify-center gap-5">
               <Image src={GoogleIcon} alt="Icone do Google" />
             </Button>
           </Link>
           <Link href={"/create-account"}>
-            <Button>Criar conta</Button>
+            <Button className="bg-[var(--black-secondary)] rounded-md hover:bg-[var(--gray-dark)] cursor-pointer text-2xl sm:w-150 h-20 p-5 flex flex-row items-center justify-center gap-5">
+              Criar conta
+            </Button>
           </Link>
         </div>
       </div>
