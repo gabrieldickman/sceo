@@ -5,11 +5,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function CreateAccountPage() {
-  const userId = await auth();
-
-  if (userId) {
-    redirect("/dashboard");
-  }
+  const { userId } = await auth();
 
   return (
     <div className="h-screen w-screen flex justify-center items-center flex-col gap-4">

@@ -4,8 +4,16 @@ import LoginImage from "../../../public/login-image.svg";
 import GoogleIcon from "../../../public/google-icon.svg";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 export default async function LoginPage() {
+  const { userId } = await auth();
+
+  if (userId) {
+    return redirect("/dashboard");
+  }
+
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 w-screen h-screen">
       <div className="flex flex-col items-center gap-90 mt-30">
