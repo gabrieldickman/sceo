@@ -1,14 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { SignIn } from "@clerk/nextjs";
-import { currentUser } from "@clerk/nextjs/server";
-import { Divide } from "lucide-react";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
-  const user = await currentUser();
+  const userId = await auth();
 
-  if (user) {
+  if (userId) {
     redirect("/dashboard");
   }
 

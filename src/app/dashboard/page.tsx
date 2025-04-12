@@ -1,16 +1,16 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
-  const user = await currentUser();
+  const userId = await auth();
 
-  if (!user) {
+  if (!userId) {
     redirect("/login");
   }
 
   return (
-    <div>
-      <h1>Pagina do Dashboard</h1>
+    <div className="flex flex-row mt-10 ml-10">
+      <h1 className="text-5xl font-bold font-white">Dashboard</h1>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 export default function TransactionsPage(){
   return(
-    <div>
-      <h1>Pagina de Movimentações de produtos</h1>
+    <div className="flex flex-row mt-10 ml-10">
+      <h1 className="text-5xl font-bold font-white">Movimentações do Estoque</h1>
     </div>
   )
 }

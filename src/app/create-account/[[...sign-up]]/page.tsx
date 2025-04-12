@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { SignUp } from "@clerk/nextjs";
-import { currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function CreateAccountPage() {
-  const user = await currentUser();
+  const userId = await auth();
 
-  if (user) {
+  if (userId) {
     redirect("/dashboard");
   }
 

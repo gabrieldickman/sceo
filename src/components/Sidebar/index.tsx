@@ -13,10 +13,10 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   const linkStyle = (path: string) =>
-    `text-left px-2 py-1 rounded-md transition ${
+    `text-left p-5 rounded-md transition ${
       pathname === path
         ? "bg-[var(--green)] text-white font-bold"
-        : "text-gray-300 hover:bg-gray-700"
+        : "text-gray-300 hover:bg-[var(--gray-dark)]"
     }`;
 
   return (
