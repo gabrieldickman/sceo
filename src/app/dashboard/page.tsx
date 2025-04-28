@@ -1,4 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import NotificationsCard from "@/components/NotificationsCard";
 
 export default function DashboardPage() {
   return (
@@ -58,6 +59,8 @@ export default function DashboardPage() {
             <h2 className="font-extrabold text-white text-7xl">R$ 450</h2>
           </CardContent>
         </Card>
+
+        <NotificationsCard />
       </main>
     </div>
   );
