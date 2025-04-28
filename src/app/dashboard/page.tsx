@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import NotificationsCard from "@/components/NotificationsCard";
+import TopProductsCard from "@/components/TopProducts";
 
 export default function DashboardPage() {
   return (
@@ -61,6 +62,7 @@ export default function DashboardPage() {
         </Card>
 
         <NotificationsCard />
+        <TopProductsCard />
       </main>
     </div>
   );
