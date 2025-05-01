@@ -21,7 +21,7 @@ export default function Sidebar() {
 
   return (
     <aside>
-      <div className="hidden sm:flex">
+      <div className="hidden lg:flex">
         <nav className="flex flex-col justify-between p-5 w-80 h-screen bg-[var(--black-secondary)] ">
           <div className="flex flex-col gap-10">
             <div>
@@ -52,7 +52,7 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      <div className="flex sm:hidden">
+      <div className="flex lg:hidden">
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" className="w-20 h-20">
@@ -63,7 +63,7 @@ export default function Sidebar() {
 
           <SheetContent
             side="left"
-            className="flex flex-col justify-between p-5 w-80 bg-[var(--black-secondary)] border-0 sm:hidden z-50 overflow-visible"
+            className="flex flex-col justify-between p-5 w-80 bg-[var(--black-secondary)] border-0 lg:hidden z-50 overflow-visible"
           >
             <div className="flex flex-col gap-10">
               <div>

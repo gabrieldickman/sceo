@@ -4,7 +4,7 @@ import { topProducts } from "@/mocks/top-products";
 
 export default function TopProductsCard() {
   return (
-    <Card className="bg-[var(--black-secondary)] rounded-xl border-[var(--gray)] overflow-y-auto h-150">
+    <Card className="bg-[var(--black-secondary)] rounded-xl border-[var(--gray)] overflow-y-auto h-120 xl:col-span-2">
       <CardContent className="text-white p-0">
         <CardHeader className="p-5">
           <CardTitle className="text-xl font-normal">
@@ -13,7 +13,6 @@ export default function TopProductsCard() {
         </CardHeader>
 
         <Table>
-          {/* Cabeçalho da tabela - visível apenas em telas grandes */}
           <TableHeader className="hidden lg:table-header-group">
             <TableRow className="text-xl">
               {["Produto", "Marca", "Categoria", "Tamanho", "Preço"].map((header) => (
@@ -47,7 +46,7 @@ export default function TopProductsCard() {
 
                 <TableCell className="flex justify-between items-center border-b border-[var(--gray)] p-4 lg:table-cell">
                   <span className="font-semibold lg:hidden">Tamanho:</span>
-                  {product.size}
+                  {product.size.toUpperCase()}
                 </TableCell>
 
                 <TableCell className="flex justify-between items-center border-b border-[var(--gray)] p-4 lg:table-cell">

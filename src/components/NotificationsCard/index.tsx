@@ -3,8 +3,8 @@ import { Card, CardContent } from "../ui/card";
 
 export default function NotificationsCard() {
   return (
-    <Card className="bg-[var(--black-primary)] h-120 rounded-xl border-[var(--gray)]">
-      <CardContent className="w-full flex flex-col gap-4 overflow-auto">
+    <Card className="bg-[var(--black-primary)] h-120 rounded-xl border-[var(--gray)] xl:col-span-2">
+      <CardContent className="w-full flex flex-col overflow-auto">
         <span className="flex flex-row items-center">
           <Dot size={48} color="#55b02e" />
           <p className="text-white text-xl">
