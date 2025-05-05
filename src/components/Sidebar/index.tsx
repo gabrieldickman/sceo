@@ -16,13 +16,13 @@ export default function Sidebar() {
     `text-left p-5 rounded-md transition ${
       pathname === path
         ? "bg-[var(--green)] text-white font-bold"
-        : "text-gray-300 hover:bg-[var(--gray-dark)]"
+        : "text-[var(--gray)] hover:bg-[var(--gray-dark)]"
     }`;
 
   return (
-    <aside>
-      <div className="hidden lg:flex">
-        <nav className="flex flex-col justify-between p-5 w-80 h-screen bg-[var(--black-secondary)] ">
+    <aside className="min-h-screen">
+      <div className="hidden lg:flex h-full">
+        <nav className="flex flex-col justify-between h-full p-5 w-80 bg-[var(--black-secondary)] ">
           <div className="flex flex-col gap-10">
             <div>
               <Image src={Logo} alt="Logo do SCEO" className="w-50 p-5" />

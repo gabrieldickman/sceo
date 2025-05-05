@@ -4,7 +4,7 @@ import TopProductsCard from "@/components/TopProducts";
 
 export default function DashboardPage() {
   return (
-    <div className="w-full h-screen flex flex-col">
+    <div className="w-full h-full flex flex-col">
       <header className="flex w-full p-10 sm:items-center sm:gap-5">
         <h1 className="text-5xl font-bold font-white">Dashboard</h1>
         <hr className="hidden sm:flex sm:flex-grow sm:border-b sm:border-[var(--gray)]" />

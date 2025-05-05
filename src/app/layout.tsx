@@ -28,7 +28,7 @@ export default async function RootLayout({
       }}
     >
       <html lang="pt-BR" className={montserrat.className}>
-        <body className="w-full h-screen flex flex-col lg:flex-row">
+        <body className="w-full min-h-screen flex flex-col lg:flex-row">
           {userId && <Sidebar />}
           {children}
         </body>
