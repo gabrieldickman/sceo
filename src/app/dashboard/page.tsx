@@ -1,6 +1,8 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import NotificationsCard from "@/components/NotificationsCard";
 import TopProductsCard from "@/components/TopProducts";
+import InventoryTable from "@/components/InventoryTable";
+import { Products } from "@/mocks/all-products";
 
 export default function DashboardPage() {
   return (
@@ -25,7 +27,7 @@ export default function DashboardPage() {
             <CardTitle className="font-semibold text-white">
               Produtos com estoque baixo
             </CardTitle>
-          </CardHeader> 
+          </CardHeader>
           <CardContent>
             <h2 className="font-extrabold text-white text-7xl">10</h2>
           </CardContent>
@@ -52,6 +54,15 @@ export default function DashboardPage() {
         </Card>
         <NotificationsCard />
         <TopProductsCard />
+        <Card className="bg-[var(--black-primary)] rounded-xl border-[var(--gray)] sm:col-span-2 xl:col-span-4">
+          <CardContent className="text-white p-0">
+            <InventoryTable
+              data={Products}
+              itemsPerPage={5}
+              enablePagination={true}
+            />
+          </CardContent>
+        </Card>
       </main>
     </div>
   );
