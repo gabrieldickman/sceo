@@ -1,10 +1,18 @@
+"use client";
+
 import InventoryTable from "@/components/InventoryTable";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Products } from "@/mocks/all-products";
+import { useState } from "react";
 
 export default function InventoryPage() {
- 
+  const [search, setSearch] = useState("");
+
+  const filteredProducts = Products.filter((product) =>
+    product.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="w-full h-full flex flex-col">
       <header className="flex w-full p-10 sm:items-center sm:gap-5">
@@ -14,7 +22,8 @@ export default function InventoryPage() {
       <main className="flex flex-col gap-5 p-10">
         <div className="flex flex-col justify-between items-start gap-5 sm:flex-row">
           <Input
-
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar produto..."
             className="w-100 h-15 border-[var(--gray)] bg-[var(--gray-dark)] !text-xl"
           />
@@ -24,7 +33,7 @@ export default function InventoryPage() {
         </div>
         <div className="h-full overflow-auto">
           <InventoryTable
-            data={Products}
+            data={filteredProducts}
             itemsPerPage={10}
             enablePagination
           />
