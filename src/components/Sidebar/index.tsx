@@ -20,8 +20,8 @@ export default function Sidebar() {
     }`;
 
   return (
-    <aside className="min-h-screen">
-      <div className="hidden lg:flex h-full">
+    <aside className="lg:min-h-screen">
+      <div className="hidden lg:flex lg:h-full">
         <nav className="flex flex-col justify-between h-full p-5 w-80 bg-[var(--black-secondary)] ">
           <div className="flex flex-col gap-10">
             <div>
