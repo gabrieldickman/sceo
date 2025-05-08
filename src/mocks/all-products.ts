@@ -24,7 +24,7 @@ export const Products: Product[] = [
     category: "Categoria 2",
     brand: "Marca 2",
     size: "m",
-    quantity: 5,
+    quantity: 0,
     price: 49.9,
     },
   {
@@ -33,7 +33,7 @@ export const Products: Product[] = [
     category: "Categoria 3",
     brand: "Marca 3",
     size: "g",
-    quantity: 0,
+    quantity: 20,
     price: 59.9,
   },
   {
@@ -60,7 +60,7 @@ export const Products: Product[] = [
     category: "Categoria 6",
     brand: "Marca 6",
     size: "p",
-    quantity: 8,
+    quantity: 0,
     price: 39.9,
   },
   {
@@ -78,7 +78,7 @@ export const Products: Product[] = [
     category: "Categoria 8",
     brand: "Marca 8",
     size: "g",
-    quantity: 0,
+    quantity: 23,
     price: 59.9,
   },
   {
@@ -123,7 +123,7 @@ export const Products: Product[] = [
     category: "Categoria 13",
     brand: "Marca 13",
     size: "g",
-    quantity: 0,
+    quantity: 11,
     price: 59.9,
   },
   {
@@ -132,7 +132,7 @@ export const Products: Product[] = [
     category: "Categoria 14",
     brand: "Marca 14",
     size: "gg",
-    quantity: 40,
+    quantity: 0,
     price: 69.9,
   },
   {
