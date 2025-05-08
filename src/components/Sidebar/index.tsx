@@ -7,7 +7,7 @@ import Image from "next/image";
 import Logo from "../../../public/Logo-minimalist-white.png";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Loggeduser from "@/components/Loggeduser";
+import LoggedUser from "@/components/LoggedUser";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -47,7 +47,7 @@ export default function Sidebar() {
             </div>
           </div>
           <div>
-            <Loggeduser />
+            <LoggedUser />
           </div>
         </nav>
       </div>
@@ -95,7 +95,7 @@ export default function Sidebar() {
               </div>
             </div>
             <div>
-              <Loggeduser />
+              <LoggedUser />
             </div>
           </SheetContent>
         </Sheet>
