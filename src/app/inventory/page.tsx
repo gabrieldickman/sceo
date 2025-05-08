@@ -19,7 +19,7 @@ export default function InventoryPage() {
         <h1 className="text-5xl font-bold font-white">Inventário</h1>
         <hr className="hidden sm:flex sm:flex-grow sm:border-b sm:border-[var(--gray)]" />
       </header>
-      <main className="flex flex-col gap-5 p-10">
+      <main className="flex flex-col gap-5 px-10">
         <div className="flex flex-col justify-between items-start gap-5 sm:flex-row">
           <Input
             value={search}
@@ -27,7 +27,7 @@ export default function InventoryPage() {
             placeholder="Buscar produto..."
             className="w-100 h-15 border-[var(--gray)] bg-[var(--gray-dark)] !text-xl"
           />
-          <Button className="text-3xl text-white cursor-pointer w-100 h-15 font-bold bg-[var(--green)] ">
+          <Button variant={"ghost"} className="text-3xl text-white cursor-pointer w-100 h-15 font-bold bg-[var(--green)] ">
             + Cadastrar Produto
           </Button>
         </div>

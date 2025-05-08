@@ -11,7 +11,7 @@ export default function DashboardPage() {
         <h1 className="text-5xl font-bold font-white">Dashboard</h1>
         <hr className="hidden sm:flex sm:flex-grow sm:border-b sm:border-[var(--gray)]" />
       </header>
-      <main className="grid grid-cols-1 gap-5 p-10 sm:grid-cols-2 xl:grid-cols-4">
+      <main className="grid grid-cols-1 gap-5 px-10 sm:grid-cols-2 xl:grid-cols-4">
         <Card className="bg-[var(--black-primary)] h-60 rounded-xl border-[var(--gray)]">
           <CardHeader>
             <CardTitle className="font-semibold text-white">
