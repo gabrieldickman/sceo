@@ -42,7 +42,7 @@ export default function DashboardPage() {
             <h2 className="font-extrabold text-white text-7xl">5</h2>
           </CardContent>
         </Card>
-        <Card className="bg-[var(--green-dark)] h-60 rounded-xl border-[var(--gray)]">
+        <Card className="bg-[var(--gray-dark)] h-60 rounded-xl border-[var(--gray)]">
           <CardHeader>
             <CardTitle className="font-semibold text-white">
               Valor de vendas
