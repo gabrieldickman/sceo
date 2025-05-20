@@ -27,7 +27,7 @@ export default function TopProductsCard() {
             {topProducts.map((product) => (
               <TableRow
                 key={product.id}
-                className="flex flex-col text-xl mb-10 border-0 lg:table-row"
+                className="flex flex-col text-xl mb-10 border-0 lg:table-row hover:bg-transparent"
               >
                 <TableCell className="flex justify-between items-center border-b border-[var(--gray)] bg-[var(--gray-dark)] rounded-md px-5 py-10 lg:table-cell lg:bg-transparent">
                   <span className="font-bold lg:hidden">Produto:</span>

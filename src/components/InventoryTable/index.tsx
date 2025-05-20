@@ -76,11 +76,11 @@ export default function InventoryTable({
         <TableBody>
           {paginatedData.map((product) => {
             const status = getStatus(product.quantity);
-            const rowClass = status === "Indisponível" ? "bg-[var(--red)]" : "";
+            const rowClass = status === "Indisponível" ? "bg-[var(--red)] hover:bg-[var(--red)]" : "";
             return (
               <TableRow
                 key={product.id}
-                className={`flex flex-col text-xl mb-10 border-0 lg:table-row ${rowClass}`}
+                className={`flex flex-col text-xl mb-10 border-0 lg:table-row hover:bg-transparent ${rowClass}`}
               >
                 <TableCell className="flex justify-between items-center border-b border-[var(--gray)] bg-[var(--gray-dark)] rounded-md px-5 py-10 lg:table-cell lg:bg-transparent">
                   <span className="font-bold lg:hidden">Produto:</span>
@@ -118,15 +118,15 @@ export default function InventoryTable({
                   <div className="flex gap-5">
                     <Button
                       variant={"ghost"}
-                      className="bg-[var(--black-primary)] cursor-pointer"
+                      className="bg-[var(--black-primary)] cursor-pointer w-auto h-auto"
                     >
-                      <ExternalLink size={48} />
+                      <ExternalLink className="!w-6 !h-6"/>
                     </Button>
                     <Button
                       variant={"ghost"}
-                      className="bg-[var(--black-primary)] cursor-pointer"
+                      className="bg-[var(--black-primary)] cursor-pointer w-auto h-auto"
                     >
-                      <Trash2 size={24} />
+                      <Trash2 className="!w-6 !h-6"/>
                     </Button>
                   </div>
                 </TableCell>
