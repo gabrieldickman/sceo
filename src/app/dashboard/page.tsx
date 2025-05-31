@@ -3,10 +3,13 @@ import NotificationsCard from "@/components/NotificationsCard";
 import InventoryTable from "@/components/InventoryTable";
 import { prisma } from "@/lib/prisma";
 import TopProductsCard from "@/components/TopProducts";
+import { topProducts } from "@/mocks/top-products";
 
-interface InventoryProduct {
+interface SimpleProduct {
   id: number;
   name: string;
+  categoryId: number;
+  brandId: number;
   category: string;
   brand: string;
   size: string;
@@ -23,12 +26,14 @@ export default async function DashboardPage() {
     orderBy: { name: "asc" },
   });
 
-  const products: InventoryProduct[] = rawProducts.map((product) => ({
+  const products: SimpleProduct[] = rawProducts.map((product) => ({
     id: product.id,
     name: product.name,
     quantity: product.quantity,
     price: product.price,
     size: product.size,
+    categoryId: product.category.id,  // IDs adicionados
+    brandId: product.brand.id,
     category: product.category.name,
     brand: product.brand.name,
   }));
@@ -78,7 +83,7 @@ export default async function DashboardPage() {
 
         <NotificationsCard />
 
-        {products.length === 0 ? (
+        {topProducts.length === 0 ? (
           <Card className="bg-[var(--black-secondary)] rounded-xl border-[var(--gray)] overflow-y-auto h-120 xl:col-span-2">
             <CardContent className="h-full flex items-center justify-center text-white p-0">
               <div className="flex items-center justify-center h-full">
