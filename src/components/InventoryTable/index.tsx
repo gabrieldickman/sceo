@@ -14,21 +14,25 @@ import { Pagination } from "../Pagination/Pagination";
 import { ExternalLink, Trash2 } from "lucide-react";
 import { getStatus } from "@/helpers/InventoryTable/getStatus";
 
-interface Product {
+type SimpleProduct = {
   id: number;
   name: string;
-  category: string;
-  brand: string;
-  size: string;
   quantity: number;
   price: number;
-}
+  size: string;
+  categoryId: number;
+  brandId: number;
+  category: string;
+  brand: string;
+};
 
-interface InventoryTableProps {
-  data: Product[];
+type InventoryTableProps = {
+  data: SimpleProduct[];
   itemsPerPage: number;
   enablePagination?: boolean;
-}
+  onEdit?: (product: SimpleProduct) => void;
+  onDelete?: (id: number) => void;
+};
 
 function ResponsiveTableCell({
   label,
@@ -49,13 +53,20 @@ function ResponsiveTableCell({
   );
 }
 
-function ActionsCell() {
+function ActionsCell({
+  onEdit,
+  onDelete,
+}: {
+  onEdit: () => void;
+  onDelete: () => void;
+}) {
   return (
     <div className="flex gap-5">
       <Button
         variant="ghost"
         className="bg-[var(--black-primary)] cursor-pointer w-auto h-auto"
-        aria-label="Visualizar produto"
+        aria-label="Editar produto"
+        onClick={onEdit}
       >
         <ExternalLink className="!w-6 !h-6" />
       </Button>
@@ -63,6 +74,7 @@ function ActionsCell() {
         variant="ghost"
         className="bg-[var(--black-primary)] cursor-pointer w-auto h-auto"
         aria-label="Deletar produto"
+        onClick={onDelete}
       >
         <Trash2 className="!w-6 !h-6" />
       </Button>
@@ -74,6 +86,8 @@ export default function InventoryTable({
   data,
   itemsPerPage,
   enablePagination = true,
+  onEdit,
+  onDelete,
 }: InventoryTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -157,7 +171,10 @@ export default function InventoryTable({
                   {status}
                 </ResponsiveTableCell>
                 <ResponsiveTableCell label="Ações">
-                  <ActionsCell />
+                  <ActionsCell
+                    onEdit={() => onEdit?.(product)}
+                    onDelete={() => onDelete?.(product.id)}
+                  />
                 </ResponsiveTableCell>
               </TableRow>
             );

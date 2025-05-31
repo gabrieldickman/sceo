@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 interface UpsertProductDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  productIdToEdit?: number | null; // ID do produto para editar, null/undefined para novo
 }
 
 const productSchema = z.object({
@@ -32,6 +33,7 @@ type ProductFormData = z.infer<typeof productSchema>;
 export default function UpsertProductDialog({
   open,
   onOpenChange,
+  productIdToEdit = null,
 }: UpsertProductDialogProps) {
   const {
     register,
@@ -69,32 +71,56 @@ export default function UpsertProductDialog({
 
         setAvailableCategories(categoriesData.map((cat: any) => cat.name));
         setAvailableBrands(brandsData.map((brand: any) => brand.name));
+
+        if (productIdToEdit) {
+          const productRes = await fetch(`/api/products/${productIdToEdit}`);
+          if (!productRes.ok) throw new Error("Produto não encontrado");
+          const productData = await productRes.json();
+
+          const category = categoriesData.find(
+            (c: any) => c.id === productData.categoryId
+          )?.name;
+          const brand = brandsData.find(
+            (b: any) => b.id === productData.brandId
+          )?.name;
+
+          reset({
+            name: productData.name,
+            category: category || "",
+            brand: brand || "",
+            size: productData.size,
+            quantity: productData.quantity,
+            price: productData.price,
+          });
+        } else {
+          reset({
+            name: "",
+            category: "",
+            brand: "",
+            size: "",
+            quantity: 0,
+            price: 0,
+          });
+        }
       } catch (error) {
-        console.error("Erro ao carregar categorias e marcas:", error);
+        console.error("Erro ao carregar categorias, marcas e produto:", error);
       }
     }
 
     if (open) {
       fetchData();
     }
-  }, [open]);
-
-  function handleCreateCategory(newCategory: string) {
-    setAvailableCategories((prev) =>
-      prev.includes(newCategory) ? prev : [...prev, newCategory]
-    );
-  }
-
-  function handleCreateBrand(newBrand: string) {
-    setAvailableBrands((prev) =>
-      prev.includes(newBrand) ? prev : [...prev, newBrand]
-    );
-  }
+  }, [open, productIdToEdit, reset, setValue]);
 
   async function onSubmit(data: ProductFormData) {
     try {
-      const response = await fetch("/api/products", {
-        method: "POST",
+      const method = productIdToEdit ? "PUT" : "POST";
+      const url = productIdToEdit
+        ? `/api/products/${productIdToEdit}`
+        : "/api/products";
+
+      const response = await fetch(url, {
+        method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -104,26 +130,25 @@ export default function UpsertProductDialog({
       if (!response.ok) throw new Error("Erro ao salvar produto");
 
       const result = await response.json();
-      console.log("Produto cadastrado com sucesso:", result);
+      console.log("Produto salvo com sucesso:", result);
 
       onOpenChange(false);
-      reset();
+      reset({
+        quantity: 0,
+        price: 0,
+      });
     } catch (error) {
       console.error(error);
-      alert("Erro ao cadastrar produto");
+      alert("Erro ao salvar produto");
     }
   }
-
-  useEffect(() => {
-    if (!open) reset();
-  }, [open, reset]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-[var(--gray-dark)] flex flex-col gap-5 w-full h-auto border-0 p-10">
         <DialogHeader>
           <DialogTitle className="text-4xl font-bold text-white text-center">
-            Cadastrar Produto
+            {productIdToEdit ? "Editar Produto" : "Cadastrar Produto"}
           </DialogTitle>
           <p className="text-center text-xl text-[var(--gray)]">
             Insira as informações abaixo
@@ -153,7 +178,11 @@ export default function UpsertProductDialog({
             options={availableCategories}
             setValue={setValue}
             placeholder="Selecione"
-            onCreate={handleCreateCategory}
+            onCreate={(newCategory) => {
+              if (!availableCategories.includes(newCategory)) {
+                setAvailableCategories((prev) => [...prev, newCategory]);
+              }
+            }}
           />
           {errors.category && (
             <p className="text-red-500">{errors.category.message}</p>
@@ -166,7 +195,11 @@ export default function UpsertProductDialog({
             options={availableBrands}
             setValue={setValue}
             placeholder="Selecione"
-            onCreate={handleCreateBrand}
+            onCreate={(newBrand) => {
+              if (!availableBrands.includes(newBrand)) {
+                setAvailableBrands((prev) => [...prev, newBrand]);
+              }
+            }}
           />
           {errors.brand && (
             <p className="text-red-500">{errors.brand.message}</p>
@@ -224,7 +257,7 @@ export default function UpsertProductDialog({
               variant={"ghost"}
               className="w-full h-15 bg-[var(--green)] text-white text-2xl cursor-pointer"
             >
-              Salvar Produto
+              {productIdToEdit ? "Salvar Alterações" : "Salvar Produto"}
             </Button>
           </DialogFooter>
         </form>

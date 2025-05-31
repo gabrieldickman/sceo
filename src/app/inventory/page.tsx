@@ -4,19 +4,25 @@ import { useState, useEffect, useMemo } from "react";
 import InventoryTable from "@/components/InventoryTable";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import UpsertProduct from "@/components/UpsertProductDialog";
+import UpsertProductDialog from "@/components/UpsertProductDialog";
 import { Product } from "@prisma/client";
 import { useDebounce } from "@/hooks/useDebounce";
+
+type ProductWithRelations = Product & {
+  category: { id: number; name: string };
+  brand: { id: number; name: string };
+};
 
 export default function InventoryPage() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductWithRelations[]>([]);
+  const [productToEdit, setProductToEdit] = useState<Product | null>(null);
 
   const fetchProducts = async () => {
     const res = await fetch("/api/products");
-    const data = await res.json();
+    const data: ProductWithRelations[] = await res.json();
     setProducts(data);
   };
 
@@ -27,18 +33,51 @@ export default function InventoryPage() {
   const handleDialogChange = (open: boolean) => {
     setDialogOpen(open);
     if (!open) {
-      fetchProducts(); // refetch ao fechar o modal
+      setProductToEdit(null);
+      fetchProducts();
     }
   };
 
+  const handleEdit = (product: Product) => {
+    setProductToEdit(product);
+    setDialogOpen(true);
+  };
+
+  const handleDelete = async (id: number) => {
+    const confirmed = window.confirm(
+      "Tem certeza que deseja excluir este produto?"
+    );
+    if (!confirmed) return;
+
+    await fetch(`/api/products/${id}`, {
+      method: "DELETE",
+    });
+
+    fetchProducts();
+  };
+
+  const adaptedProducts = useMemo(() => {
+    return products.map((product) => ({
+      id: product.id,
+      name: product.name,
+      quantity: product.quantity,
+      price: product.price,
+      size: product.size,
+      categoryId: product.category?.id ?? 0,
+      category: product.category?.name ?? "Sem categoria",
+      brandId: product.brand?.id ?? 0,
+      brand: product.brand?.name ?? "Sem marca",
+    }));
+  }, [products]);
+
   const filteredProducts = useMemo(() => {
     const lowerSearch = debouncedSearch.toLowerCase();
-    return products.filter((product) =>
-      `${product.name} ${product.categoryId} ${product.brandId} ${product.size}`
+    return adaptedProducts.filter((product) =>
+      `${product.name} ${product.category} ${product.brand} ${product.size}`
         .toLowerCase()
         .includes(lowerSearch)
     );
-  }, [products, debouncedSearch]);
+  }, [adaptedProducts, debouncedSearch]);
 
   return (
     <div
@@ -62,7 +101,10 @@ export default function InventoryPage() {
           <Button
             variant="ghost"
             className="text-3xl text-white cursor-pointer w-100 h-15 font-bold bg-[var(--green)]"
-            onClick={() => setDialogOpen(true)}
+            onClick={() => {
+              setProductToEdit(null);
+              setDialogOpen(true);
+            }}
           >
             + Cadastrar Produto
           </Button>
@@ -73,10 +115,16 @@ export default function InventoryPage() {
             data={filteredProducts}
             itemsPerPage={10}
             enablePagination
+            onEdit={handleEdit}
+            onDelete={handleDelete}
           />
         </div>
 
-        <UpsertProduct open={dialogOpen} onOpenChange={handleDialogChange} />
+        <UpsertProductDialog
+          open={dialogOpen}
+          onOpenChange={handleDialogChange}
+          productIdToEdit={productToEdit ? productToEdit.id : null}
+        />
       </main>
     </div>
   );

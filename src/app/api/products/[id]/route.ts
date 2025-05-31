@@ -11,13 +11,37 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
 }
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const data = await req.json();
+  const { name, category, brand, size, quantity, price } = await req.json();
+
+  const categoryObj = await prisma.category.findUnique({
+    where: { name: category },
+  });
+  const brandObj = await prisma.brand.findUnique({
+    where: { name: brand },
+  });
+
+  if (!categoryObj || !brandObj) {
+    return NextResponse.json(
+      { error: "Categoria ou marca inválida" },
+      { status: 400 }
+    );
+  }
+
   const updated = await prisma.product.update({
     where: { id: Number(params.id) },
-    data,
+    data: {
+      name,
+      size,
+      quantity,
+      price,
+      categoryId: categoryObj.id,
+      brandId: brandObj.id,
+    },
   });
+
   return NextResponse.json(updated);
 }
+
 
 export async function DELETE(_: Request, { params }: { params: { id: string } }) {
   await prisma.product.delete({
