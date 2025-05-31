@@ -1,19 +1,44 @@
 "use client";
 
+import { useState, useEffect, useMemo } from "react";
 import InventoryTable from "@/components/InventoryTable";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Products } from "@/mocks/all-products";
-import { useState } from "react";
 import UpsertProduct from "@/components/UpsertProductDialog";
+import { Product } from "@prisma/client";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function InventoryPage() {
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
 
-  const filteredProducts = Products.filter((product) =>
-    product.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const fetchProducts = async () => {
+    const res = await fetch("/api/products");
+    const data = await res.json();
+    setProducts(data);
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const handleDialogChange = (open: boolean) => {
+    setDialogOpen(open);
+    if (!open) {
+      fetchProducts(); // refetch ao fechar o modal
+    }
+  };
+
+  const filteredProducts = useMemo(() => {
+    const lowerSearch = debouncedSearch.toLowerCase();
+    return products.filter((product) =>
+      `${product.name} ${product.categoryId} ${product.brandId} ${product.size}`
+        .toLowerCase()
+        .includes(lowerSearch)
+    );
+  }, [products, debouncedSearch]);
 
   return (
     <div
@@ -22,9 +47,10 @@ export default function InventoryPage() {
       }`}
     >
       <header className="flex w-full p-10 sm:items-center sm:gap-5">
-        <h1 className="text-5xl font-bold font-white">Inventário</h1>
+        <h1 className="text-5xl font-bold text-white">Inventário</h1>
         <hr className="hidden sm:flex sm:flex-grow sm:border-b sm:border-[var(--gray)]" />
       </header>
+
       <main className="flex flex-col gap-5 px-10">
         <div className="flex flex-col justify-between items-start gap-5 sm:flex-row">
           <Input
@@ -34,13 +60,14 @@ export default function InventoryPage() {
             className="w-100 h-15 border-[var(--gray)] bg-[var(--gray-dark)] !text-xl"
           />
           <Button
-            variant={"ghost"}
+            variant="ghost"
             className="text-3xl text-white cursor-pointer w-100 h-15 font-bold bg-[var(--green)]"
             onClick={() => setDialogOpen(true)}
           >
             + Cadastrar Produto
           </Button>
         </div>
+
         <div className="h-full overflow-auto">
           <InventoryTable
             data={filteredProducts}
@@ -48,10 +75,9 @@ export default function InventoryPage() {
             enablePagination
           />
         </div>
-        <UpsertProduct open={dialogOpen} onOpenChange={setDialogOpen} />
+
+        <UpsertProduct open={dialogOpen} onOpenChange={handleDialogChange} />
       </main>
     </div>
   );
 }
-
-

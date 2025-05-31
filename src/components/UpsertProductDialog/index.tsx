@@ -10,42 +10,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { Products } from "@/mocks/all-products";
 import { Combobox } from "../Combobox";
-import { Ghost } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface UpsertProductDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-const availableCategories = Array.from(
-  new Set(Products.map((product) => product.category))
-);
-
-const availableSizes = Array.from(
-  new Set(Products.map((product) => product.size))
-);
-
-const availableBrands = Array.from(
-  new Set(Products.map((product) => product.brand))
-);
-
 const productSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
-  category: z
-    .string({
-      required_error: "Categoria é obrigatória",
-    })
-    .min(1, "Categoria é obrigatória"),
+  category: z.string().min(1, "Categoria é obrigatória"),
   brand: z.string().min(1, "Marca é obrigatória"),
   size: z.string().min(1, "Tamanho obrigatório"),
   quantity: z.coerce.number().int().min(0, "Quantidade inválida"),
@@ -73,14 +48,74 @@ export default function UpsertProductDialog({
     },
   });
 
-  function onSubmit(data: ProductFormData) {
-    console.log("Produto cadastrado:", data);
+  const [availableCategories, setAvailableCategories] = useState<string[]>([]);
+  const [availableBrands, setAvailableBrands] = useState<string[]>([]);
+  const availableSizes = ["P", "M", "G", "GG"];
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [categoriesRes, brandsRes] = await Promise.all([
+          fetch("/api/category"),
+          fetch("/api/brand"),
+        ]);
+
+        if (!categoriesRes.ok || !brandsRes.ok) {
+          throw new Error("Erro ao buscar categorias ou marcas");
+        }
+
+        const categoriesData = await categoriesRes.json();
+        const brandsData = await brandsRes.json();
+
+        setAvailableCategories(categoriesData.map((cat: any) => cat.name));
+        setAvailableBrands(brandsData.map((brand: any) => brand.name));
+      } catch (error) {
+        console.error("Erro ao carregar categorias e marcas:", error);
+      }
+    }
+
+    if (open) {
+      fetchData();
+    }
+  }, [open]);
+
+  function handleCreateCategory(newCategory: string) {
+    setAvailableCategories((prev) =>
+      prev.includes(newCategory) ? prev : [...prev, newCategory]
+    );
+  }
+
+  function handleCreateBrand(newBrand: string) {
+    setAvailableBrands((prev) =>
+      prev.includes(newBrand) ? prev : [...prev, newBrand]
+    );
+  }
+
+  async function onSubmit(data: ProductFormData) {
+    try {
+      const response = await fetch("/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) throw new Error("Erro ao salvar produto");
+
+      const result = await response.json();
+      console.log("Produto cadastrado com sucesso:", result);
+
+      onOpenChange(false);
+      reset();
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao cadastrar produto");
+    }
   }
 
   useEffect(() => {
-    if (!open) {
-      reset();
-    }
+    if (!open) reset();
   }, [open, reset]);
 
   return (
@@ -118,6 +153,7 @@ export default function UpsertProductDialog({
             options={availableCategories}
             setValue={setValue}
             placeholder="Selecione"
+            onCreate={handleCreateCategory}
           />
           {errors.category && (
             <p className="text-red-500">{errors.category.message}</p>
@@ -130,6 +166,7 @@ export default function UpsertProductDialog({
             options={availableBrands}
             setValue={setValue}
             placeholder="Selecione"
+            onCreate={handleCreateBrand}
           />
           {errors.brand && (
             <p className="text-red-500">{errors.brand.message}</p>
@@ -152,6 +189,7 @@ export default function UpsertProductDialog({
               <p className="text-red-500">{errors.size.message}</p>
             )}
           </div>
+
           <div className="flex flex-col gap-5">
             <Label className="text-white text-2xl">Quantidade</Label>
             <input
@@ -163,6 +201,7 @@ export default function UpsertProductDialog({
               <p className="text-red-500">{errors.quantity.message}</p>
             )}
           </div>
+
           <div className="flex flex-col gap-5">
             <Label className="text-white text-2xl">Preço</Label>
             <div className="flex flex-row gap-2 items-center">
@@ -178,6 +217,7 @@ export default function UpsertProductDialog({
               <p className="text-red-500">{errors.price.message}</p>
             )}
           </div>
+
           <DialogFooter>
             <Button
               type="submit"

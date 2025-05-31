@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -12,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Pagination } from "../Pagination/Pagination";
 import { ExternalLink, Trash2 } from "lucide-react";
-import { Products } from "@/mocks/all-products";
 import { getStatus } from "@/helpers/InventoryTable/getStatus";
 
 interface Product {
@@ -31,6 +30,46 @@ interface InventoryTableProps {
   enablePagination?: boolean;
 }
 
+function ResponsiveTableCell({
+  label,
+  children,
+  className = "",
+}: {
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <TableCell
+      className={`flex justify-between items-center border-b border-[var(--gray)] p-4 lg:table-cell ${className}`}
+    >
+      <span className="font-semibold lg:hidden">{label}:</span>
+      {children}
+    </TableCell>
+  );
+}
+
+function ActionsCell() {
+  return (
+    <div className="flex gap-5">
+      <Button
+        variant="ghost"
+        className="bg-[var(--black-primary)] cursor-pointer w-auto h-auto"
+        aria-label="Visualizar produto"
+      >
+        <ExternalLink className="!w-6 !h-6" />
+      </Button>
+      <Button
+        variant="ghost"
+        className="bg-[var(--black-primary)] cursor-pointer w-auto h-auto"
+        aria-label="Deletar produto"
+      >
+        <Trash2 className="!w-6 !h-6" />
+      </Button>
+    </div>
+  );
+}
+
 export default function InventoryTable({
   data,
   itemsPerPage,
@@ -40,14 +79,17 @@ export default function InventoryTable({
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
-  const paginatedData = data.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return data.slice(start, start + itemsPerPage);
+  }, [data, currentPage, itemsPerPage]);
 
-  const inventoryTotalValue = Products.reduce((total, product) => {
-    return total + product.price * product.quantity;
-  }, 0);
+  const inventoryTotalValue = useMemo(() => {
+    return data.reduce(
+      (total, product) => total + product.price * product.quantity,
+      0
+    );
+  }, [data]);
 
   return (
     <div className="flex flex-col gap-4 col-span-4">
@@ -73,85 +115,73 @@ export default function InventoryTable({
             ))}
           </TableRow>
         </TableHeader>
+
         <TableBody>
           {paginatedData.map((product) => {
             const status = getStatus(product.quantity);
-            const rowClass = status === "Indisponível" ? "bg-[var(--red)] hover:bg-[var(--red)]" : "";
+            const rowClass =
+              status === "Indisponível"
+                ? "bg-[var(--red)] hover:bg-[var(--red)]"
+                : "";
+
             return (
               <TableRow
                 key={product.id}
                 className={`flex flex-col text-xl mb-10 border-0 lg:table-row hover:bg-transparent ${rowClass}`}
               >
-                <TableCell className="flex justify-between items-center border-b border-[var(--gray)] bg-[var(--gray-dark)] rounded-md px-5 py-10 lg:table-cell lg:bg-transparent">
-                  <span className="font-bold lg:hidden">Produto:</span>
+                <ResponsiveTableCell
+                  label="Produto"
+                  className="rounded-md px-5 py-10 lg:bg-transparent border-b border-[var(--gray)] bg-[var(--gray-dark)] font-bold"
+                >
                   {product.name}
-                </TableCell>
-                <TableCell className="flex justify-between items-center border-b border-[var(--gray)] p-4 lg:table-cell">
-                  <span className="font-semibold lg:hidden">Categoria:</span>
+                </ResponsiveTableCell>
+                <ResponsiveTableCell label="Categoria">
                   {product.category}
-                </TableCell>
-                <TableCell className="flex justify-between items-center border-b border-[var(--gray)] p-4 lg:table-cell">
-                  <span className="font-semibold lg:hidden">Marca:</span>
+                </ResponsiveTableCell>
+                <ResponsiveTableCell label="Marca">
                   {product.brand}
-                </TableCell>
-                <TableCell className="flex justify-between items-center border-b border-[var(--gray)] p-4 lg:table-cell">
-                  <span className="font-semibold lg:hidden">Tamanho:</span>
+                </ResponsiveTableCell>
+                <ResponsiveTableCell label="Tamanho">
                   {product.size.toUpperCase()}
-                </TableCell>
-                <TableCell className="flex justify-between items-center border-b border-[var(--gray)] p-4 lg:table-cell">
-                  <span className="font-semibold lg:hidden">Quantidade:</span>
+                </ResponsiveTableCell>
+                <ResponsiveTableCell label="Quantidade">
                   {product.quantity}
-                </TableCell>
-                <TableCell className="flex justify-between items-center border-b border-[var(--gray)] p-4 lg:table-cell">
-                  <span className="font-semibold lg:hidden">Preço:</span>
+                </ResponsiveTableCell>
+                <ResponsiveTableCell label="Preço">
                   {product.price.toLocaleString("pt-BR", {
                     style: "currency",
                     currency: "BRL",
                   })}
-                </TableCell>
-                <TableCell className="flex justify-between items-center border-b border-[var(--gray)] p-4 lg:table-cell">
-                  <span className="font-semibold lg:hidden">Status:</span>
+                </ResponsiveTableCell>
+                <ResponsiveTableCell label="Status">
                   {status}
-                </TableCell>
-                <TableCell className="flex justify-between items-center border-b border-[var(--gray)] p-4 lg:table-cell">
-                  <span className="font-semibold lg:hidden">Ações:</span>
-                  <div className="flex gap-5">
-                    <Button
-                      variant={"ghost"}
-                      className="bg-[var(--black-primary)] cursor-pointer w-auto h-auto"
-                    >
-                      <ExternalLink className="!w-6 !h-6"/>
-                    </Button>
-                    <Button
-                      variant={"ghost"}
-                      className="bg-[var(--black-primary)] cursor-pointer w-auto h-auto"
-                    >
-                      <Trash2 className="!w-6 !h-6"/>
-                    </Button>
-                  </div>
-                </TableCell>
+                </ResponsiveTableCell>
+                <ResponsiveTableCell label="Ações">
+                  <ActionsCell />
+                </ResponsiveTableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
 
-      {enablePagination && totalPages > 1 && (
-        <div className="flex justify-between items-center mx-5 mt-3">
-          <span className="text-white font-semibold text-xl">
-            Valor total do inventário:{" "}
-            {inventoryTotalValue.toLocaleString("pt-BR", {
-              style: "currency",
-              currency: "BRL",
-            })}
-          </span>
+      <div className="flex justify-between items-center mx-5 mt-3">
+        <span className="text-white font-semibold text-xl">
+          Valor total do inventário:{" "}
+          {inventoryTotalValue.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+          })}
+        </span>
+
+        {enablePagination && totalPages > 1 && (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
           />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
