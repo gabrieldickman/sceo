@@ -32,7 +32,7 @@ export default async function DashboardPage() {
     quantity: product.quantity,
     price: product.price,
     size: product.size,
-    categoryId: product.category.id,  // IDs adicionados
+    categoryId: product.category.id, 
     brandId: product.brand.id,
     category: product.category.name,
     brand: product.brand.name,

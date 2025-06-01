@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(_: Request, { params }: { params: { id: string } }) {
   const product = await prisma.product.findUnique({
@@ -7,25 +7,36 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
   });
   return product
     ? NextResponse.json(product)
-    : NextResponse.json({ error: 'Not found' }, { status: 404 });
+    : NextResponse.json({ error: "Not found" }, { status: 404 });
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   const { name, category, brand, size, quantity, price } = await req.json();
 
-  const categoryObj = await prisma.category.findUnique({
+  if (
+    !name ||
+    !category ||
+    !brand ||
+    !size ||
+    quantity == null ||
+    price == null
+  ) {
+    return NextResponse.json({ error: "Dados incompletos" }, { status: 400 });
+  }
+  const categoryObj = await prisma.category.upsert({
     where: { name: category },
-  });
-  const brandObj = await prisma.brand.findUnique({
-    where: { name: brand },
+    update: {},
+    create: { name: category },
   });
 
-  if (!categoryObj || !brandObj) {
-    return NextResponse.json(
-      { error: "Categoria ou marca inválida" },
-      { status: 400 }
-    );
-  }
+  const brandObj = await prisma.brand.upsert({
+    where: { name: brand },
+    update: {},
+    create: { name: brand },
+  });
 
   const updated = await prisma.product.update({
     where: { id: Number(params.id) },
@@ -42,8 +53,10 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   return NextResponse.json(updated);
 }
 
-
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  _: Request,
+  { params }: { params: { id: string } }
+) {
   await prisma.product.delete({
     where: { id: Number(params.id) },
   });

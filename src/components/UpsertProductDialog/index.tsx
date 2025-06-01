@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 interface UpsertProductDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  productIdToEdit?: number | null; // ID do produto para editar, null/undefined para novo
+  productIdToEdit?: number | null; 
 }
 
 const productSchema = z.object({
@@ -69,7 +69,7 @@ export default function UpsertProductDialog({
         const categoriesData = await categoriesRes.json();
         const brandsData = await brandsRes.json();
 
-        setAvailableCategories(categoriesData.map((cat: any) => cat.name));
+        setAvailableCategories(categoriesData.map((category: any) => category.name));
         setAvailableBrands(brandsData.map((brand: any) => brand.name));
 
         if (productIdToEdit) {
@@ -78,10 +78,10 @@ export default function UpsertProductDialog({
           const productData = await productRes.json();
 
           const category = categoriesData.find(
-            (c: any) => c.id === productData.categoryId
+            (category: any) => category.id === productData.categoryId
           )?.name;
           const brand = brandsData.find(
-            (b: any) => b.id === productData.brandId
+            (brand: any) => brand.id === productData.brandId
           )?.name;
 
           reset({
@@ -151,7 +151,7 @@ export default function UpsertProductDialog({
             {productIdToEdit ? "Editar Produto" : "Cadastrar Produto"}
           </DialogTitle>
           <p className="text-center text-xl text-[var(--gray)]">
-            Insira as informações abaixo
+           {productIdToEdit ? "Altere as informações necessárias" : "Insira as informações do produto"}
           </p>
         </DialogHeader>
 

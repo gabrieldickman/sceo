@@ -13,7 +13,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Nome é obrigatório" }, { status: 400 });
   }
 
-  // Se name não for unique, troque findUnique por findFirst
   const existing = await prisma.category.findFirst({ where: { name } });
 
   if (existing) {
