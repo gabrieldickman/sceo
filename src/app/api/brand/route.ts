@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import type { NextRequest } from "next/server"; 
 
 export async function GET() {
   const brands = await prisma.brand.findMany();
   return NextResponse.json(brands);
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const { name } = await request.json();
 
   if (!name) {

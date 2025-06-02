@@ -1,33 +1,25 @@
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma"; // ajuste o path se necessário
+import { NextResponse, NextRequest } from "next/server";
+import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const products = await prisma.product.findMany();
-
     const totalProductsCount = await prisma.product.aggregate({
-      _sum: {
-        quantity: true,
-      },
+      _sum: { quantity: true },
     });
 
     const lowStockCount = await prisma.product.count({
-      where: {
-        quantity: {
-          lt: 5,
-        },
-      },
+      where: { quantity: { lt: 5, gt: 0 } }, // opcional para ignorar 0
     });
 
     const zeroStockCount = await prisma.product.count({
-      where: {
-        quantity: 0,
-      },
+      where: { quantity: 0 },
     });
 
-    const totalInventoryValue = products.reduce((acc, product) => {
-      return acc + product.price * product.quantity;
-    }, 0);
+    const totalInventoryValueResult = await prisma.$queryRaw<
+      { total: number }[]
+    >`SELECT COALESCE(SUM(price * quantity), 0) as total FROM "Product"`;
+
+    const totalInventoryValue = totalInventoryValueResult[0]?.total || 0;
 
     return NextResponse.json({
       totalProducts: totalProductsCount._sum.quantity || 0,
@@ -36,6 +28,7 @@ export async function GET() {
       totalInventoryValue,
     });
   } catch (error) {
+    console.error("Erro ao buscar dados do inventário:", error);
     return NextResponse.json(
       { error: "Erro ao buscar dados do inventário" },
       { status: 500 }
