@@ -4,21 +4,11 @@ import InventoryTable from "@/components/InventoryTable";
 import { prisma } from "@/lib/prisma";
 import TopProductsCard from "@/components/TopProducts";
 import { topProducts } from "@/mocks/top-products";
-
-interface SimpleProduct {
-  id: number;
-  name: string;
-  categoryId: number;
-  brandId: number;
-  category: string;
-  brand: string;
-  size: string;
-  quantity: number;
-  price: number;
-}
+import { Product } from "@/types/product";
+import { getInventoryStats } from "@/helpers/DashboardStatsCards/inventoryStats";
 
 export default async function DashboardPage() {
-  const rawProducts = await prisma.product.findMany({
+  const productList = await prisma.product.findMany({
     include: {
       category: true,
       brand: true,
@@ -26,7 +16,7 @@ export default async function DashboardPage() {
     orderBy: { name: "asc" },
   });
 
-  const products: SimpleProduct[] = rawProducts.map((product) => ({
+  const products: Product[] = productList.map((product) => ({
     id: product.id,
     name: product.name,
     quantity: product.quantity,
@@ -38,21 +28,10 @@ export default async function DashboardPage() {
     brand: product.brand.name,
   }));
 
-  const totalProducts = products.length;
-  const lowStockCount = products.filter(
-    (p) => p.quantity <= 5 && p.quantity > 0
-  ).length;
-  const zeroStockCount = products.filter((p) => p.quantity === 0).length;
-  const totalInventoryValue = products.reduce(
-    (acc, product) => acc + product.price * product.quantity,
-    0
-  );
+  const { totalProducts, lowStockCount, zeroStockCount, totalInventoryValue } =
+    getInventoryStats(products);
 
-  const renderCard = (
-    title: string,
-    value: string | number,
-    color = "var(--black-primary)"
-  ) => (
+  const StatsCards = ( title: string, value: string | number, color = "var(--black-primary)" ) => (
     <Card className={`bg-[${color}] h-60 rounded-xl border-[var(--gray)]`}>
       <CardHeader>
         <CardTitle className="font-semibold text-white">{title}</CardTitle>
@@ -71,10 +50,10 @@ export default async function DashboardPage() {
       </header>
 
       <main className="grid grid-cols-1 gap-5 px-10 sm:grid-cols-2 xl:grid-cols-4">
-        {renderCard("Total de Produtos", totalProducts)}
-        {renderCard("Produtos com estoque baixo", lowStockCount)}
-        {renderCard("Produtos com estoque zerado", zeroStockCount)}
-        {renderCard(
+        {StatsCards("Total de Produtos", totalProducts)}
+        {StatsCards("Produtos com estoque baixo", lowStockCount)}
+        {StatsCards("Produtos com estoque zerado", zeroStockCount)}
+        {StatsCards(
           "Valor do Estoque",
           totalInventoryValue.toLocaleString("pt-BR", {
             style: "currency",

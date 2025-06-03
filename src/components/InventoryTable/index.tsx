@@ -12,25 +12,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Pagination } from "../Pagination/Pagination";
 import { ExternalLink, Trash2 } from "lucide-react";
-import { getStatus } from "@/helpers/InventoryTable/getStatus";
-
-type SimpleProduct = {
-  id: number;
-  name: string;
-  quantity: number;
-  price: number;
-  size: string;
-  categoryId: number;
-  brandId: number;
-  category: string;
-  brand: string;
-};
+import { getStatus } from "@/helpers/InventoryTableItemStatus/getStatus";
+import { Product } from "@/types/product";
 
 type InventoryTableProps = {
-  data: SimpleProduct[];
+  data: Product[];
   itemsPerPage: number;
   enablePagination?: boolean;
-  onEdit?: (product: SimpleProduct) => void;
+  onEdit?: (product: Product) => void;
   onDelete?: (id: number) => void;
 };
 
