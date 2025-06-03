@@ -32,14 +32,16 @@ export default async function DashboardPage() {
     quantity: product.quantity,
     price: product.price,
     size: product.size,
-    categoryId: product.category.id, 
+    categoryId: product.category.id,
     brandId: product.brand.id,
     category: product.category.name,
     brand: product.brand.name,
   }));
 
   const totalProducts = products.length;
-  const lowStockCount = products.filter((p) => p.quantity <= 5 && p.quantity > 0).length;
+  const lowStockCount = products.filter(
+    (p) => p.quantity <= 5 && p.quantity > 0
+  ).length;
   const zeroStockCount = products.filter((p) => p.quantity === 0).length;
   const totalInventoryValue = products.reduce(
     (acc, product) => acc + product.price * product.quantity,
@@ -73,7 +75,7 @@ export default async function DashboardPage() {
         {renderCard("Produtos com estoque baixo", lowStockCount)}
         {renderCard("Produtos com estoque zerado", zeroStockCount)}
         {renderCard(
-          "Valor de vendas",
+          "Valor do Estoque",
           totalInventoryValue.toLocaleString("pt-BR", {
             style: "currency",
             currency: "BRL",
@@ -102,7 +104,11 @@ export default async function DashboardPage() {
                 <p>Nenhum produto cadastrado no banco de dados</p>
               </div>
             ) : (
-              <InventoryTable data={products} itemsPerPage={5} enablePagination />
+              <InventoryTable
+                data={products}
+                itemsPerPage={5}
+                enablePagination
+              />
             )}
           </CardContent>
         </Card>

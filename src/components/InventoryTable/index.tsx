@@ -184,7 +184,7 @@ export default function InventoryTable({
 
       <div className="flex justify-between items-center mx-5 mt-3">
         <span className="text-white font-semibold text-xl">
-          Valor total do inventário:{" "}
+          Valor do Estoque:{" "}
           {inventoryTotalValue.toLocaleString("pt-BR", {
             style: "currency",
             currency: "BRL",
