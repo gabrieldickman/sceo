@@ -58,8 +58,8 @@ export default function UpsertProductDialog({
     async function fetchData() {
       try {
         const [categoriesRes, brandsRes] = await Promise.all([
-          fetch("/api/category"),
-          fetch("/api/brand"),
+          fetch("/api/categories"),
+          fetch("/api/brands"),
         ]);
 
         if (!categoriesRes.ok || !brandsRes.ok) {
