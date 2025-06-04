@@ -7,7 +7,7 @@ import Image from "next/image";
 import Logo from "../../../public/Logo-minimalist-white.png";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import LoggedUser from "../../components/LoggedUser/index";
+import LoggedUser from "@/components/LoggedUser";
 
 export default function Sidebar() {
   const pathname = usePathname();
