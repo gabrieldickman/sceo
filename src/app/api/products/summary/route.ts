@@ -1,25 +1,46 @@
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 
 export async function GET(req: NextRequest) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+  }
+
   try {
     const totalProductsCount = await prisma.product.aggregate({
+      where: { userId },
       _sum: { quantity: true },
     });
 
     const lowStockCount = await prisma.product.count({
-      where: { quantity: { lt: 5, gt: 0 } }, // opcional para ignorar 0
+      where: { userId, quantity: { lt: 5, gt: 0 } },
     });
 
     const zeroStockCount = await prisma.product.count({
-      where: { quantity: 0 },
+      where: { userId, quantity: 0 },
     });
 
-    const totalInventoryValueResult = await prisma.$queryRaw<
-      { total: number }[]
-    >`SELECT COALESCE(SUM(price * quantity), 0) as total FROM "Product"`;
+    const totalInventoryValueResult = await prisma.product.aggregate({
+      where: { userId },
+      _sum: {
+        price: true, 
+      },
+      _count: true,
+    });
 
-    const totalInventoryValue = totalInventoryValueResult[0]?.total || 0;
+
+    const products = await prisma.product.findMany({
+      where: { userId },
+      select: { price: true, quantity: true },
+    });
+
+    const totalInventoryValue = products.reduce(
+      (acc, p) => acc + p.price * p.quantity,
+      0
+    );
 
     return NextResponse.json({
       totalProducts: totalProductsCount._sum.quantity || 0,

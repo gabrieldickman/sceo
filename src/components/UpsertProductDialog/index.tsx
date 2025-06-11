@@ -12,11 +12,12 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Combobox } from "../Combobox";
 import { useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs";
 
 interface UpsertProductDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  productIdToEdit?: number | null; 
+  productIdToEdit?: number | null;
 }
 
 const productSchema = z.object({
@@ -53,6 +54,7 @@ export default function UpsertProductDialog({
   const [availableCategories, setAvailableCategories] = useState<string[]>([]);
   const [availableBrands, setAvailableBrands] = useState<string[]>([]);
   const availableSizes = ["P", "M", "G", "GG"];
+  const { user } = useUser();
 
   useEffect(() => {
     async function fetchData() {
@@ -62,9 +64,9 @@ export default function UpsertProductDialog({
           fetch("/api/brands"),
         ]);
 
-        if (!categoriesRes.ok || !brandsRes.ok) {
-          throw new Error("Erro ao buscar categorias ou marcas");
-        }
+        if (!categoriesRes.ok) throw new Error("Erro ao buscar categorias");
+
+        if (!brandsRes.ok) throw new Error("Erro ao buscar marcas");
 
         const categoriesData = await categoriesRes.json();
         const brandsData = await brandsRes.json();
@@ -73,9 +75,9 @@ export default function UpsertProductDialog({
         setAvailableBrands(brandsData.map((brand: any) => brand.name));
 
         if (productIdToEdit) {
-          const productRes = await fetch(`/api/products/${productIdToEdit}`);
-          if (!productRes.ok) throw new Error("Produto não encontrado");
-          const productData = await productRes.json();
+          const productId = await fetch(`/api/products/${productIdToEdit}`);
+          if (!productId.ok) throw new Error("Produto não encontrado");
+          const productData = await productId.json();
 
           const category = categoriesData.find(
             (category: any) => category.id === productData.categoryId
@@ -114,6 +116,9 @@ export default function UpsertProductDialog({
 
   async function onSubmit(data: ProductFormData) {
     try {
+      if (!user?.id) throw new Error("Usuário não autenticado");
+
+
       const method = productIdToEdit ? "PUT" : "POST";
       const url = productIdToEdit
         ? `/api/products/${productIdToEdit}`
@@ -124,7 +129,10 @@ export default function UpsertProductDialog({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          userId: user.id,
+        }),
       });
 
       if (!response.ok) throw new Error("Erro ao salvar produto");
@@ -151,7 +159,7 @@ export default function UpsertProductDialog({
             {productIdToEdit ? "Editar Produto" : "Cadastrar Produto"}
           </DialogTitle>
           <p className="text-center text-xl text-[var(--gray)]">
-           {productIdToEdit ? "Altere as informações necessárias" : "Insira as informações do produto"}
+            {productIdToEdit ? "Altere as informações necessárias" : "Insira as informações do produto"}
           </p>
         </DialogHeader>
 
