@@ -1,42 +1,69 @@
+import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
+
+function validateFields({ name, category, brand, size, quantity, price }: any) {
+  if (!name || !category || !brand || !size) {
+    return "Campos obrigatórios faltando";
+  }
+  if (typeof quantity !== "number" || quantity < 0) {
+    return "Quantidade inválida";
+  }
+  if (typeof price !== "number" || price < 0) {
+    return "Preço inválido";
+  }
+  return null;
+}
+
+async function findOrCreateByName(
+  model: "category" | "brand",
+  name: string,
+  userId: string
+) {
+  if (model === "category") {
+    const existing = await prisma.category.findUnique({
+      where: { name_userId: { name, userId } },
+    });
+    if (existing) return existing;
+
+    return prisma.category.create({
+      data: { name, userId },
+    });
+  }
+
+  if (model === "brand") {
+    const existing = await prisma.brand.findUnique({
+      where: { name_userId: { name, userId } },
+    });
+    if (existing) return existing;
+
+    return prisma.brand.create({
+      data: { name, userId },
+    });
+  }
+
+  throw new Error("Modelo inválido");
+}
+
+
 export async function POST(request: Request) {
   try {
-    const { name, category, brand, size, quantity, price } = await request.json();
-
-    if (!name || !category || !brand || !size) {
-      return NextResponse.json(
-        { error: "Campos obrigatórios faltando" },
-        { status: 400 }
-      );
-    }
-    if (typeof quantity !== "number" || quantity < 0) {
-      return NextResponse.json(
-        { error: "Quantidade inválida" },
-        { status: 400 }
-      );
-    }
-    if (typeof price !== "number" || price < 0) {
-      return NextResponse.json(
-        { error: "Preço inválido" },
-        { status: 400 }
-      );
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    let categoryObj = await prisma.category.findUnique({
-      where: { name: category },
-    });
-    if (!categoryObj) {
-      categoryObj = await prisma.category.create({ data: { name: category } });
+    const body = await request.json();
+    const error = validateFields(body);
+    if (error) {
+      return NextResponse.json({ error }, { status: 400 });
     }
 
-    let brandObj = await prisma.brand.findUnique({
-      where: { name: brand },
-    });
-    if (!brandObj) {
-      brandObj = await prisma.brand.create({ data: { name: brand } });
-    }
+    const { name, category, brand, size, quantity, price } = body;
+
+    const categoryObj = await findOrCreateByName("category", category, userId);
+    const brandObj = await findOrCreateByName("brand", brand, userId);
 
     const product = await prisma.product.create({
       data: {
@@ -46,6 +73,7 @@ export async function POST(request: Request) {
         price,
         categoryId: categoryObj.id,
         brandId: brandObj.id,
+        userId,
       },
       include: {
         category: true,
@@ -65,7 +93,13 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
+
     const products = await prisma.product.findMany({
+      where: { userId },
       orderBy: { name: "asc" },
       include: {
         category: true,

@@ -1,26 +1,48 @@
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 
 export async function GET(
   _req: NextRequest,
-  context: any  
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = parseInt(context.params.id, 10);
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+  }
 
-  const product = await prisma.product.findUnique({
-    where: { id },
+  const { id } = await params;
+  const productId = parseInt(id, 10);
+  if (isNaN(productId)) {
+    return NextResponse.json({ error: "ID inválido" }, { status: 400 });
+  }
+
+  const product = await prisma.product.findFirst({
+    where: { id: productId, userId },
   });
 
-  return product
-    ? NextResponse.json(product)
-    : NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (!product) {
+    return NextResponse.json({ error: "Produto não encontrado" }, { status: 404 });
+  }
+
+  return NextResponse.json(product);
 }
 
 export async function PUT(
   req: NextRequest,
-  context: any
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = parseInt(context.params.id, 10);
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+  }
+
+  const { id } = await params;
+  const productId = parseInt(id, 10);
+  if (isNaN(productId)) {
+    return NextResponse.json({ error: "ID inválido" }, { status: 400 });
+  }
+
   const { name, category, brand, size, quantity, price } = await req.json();
 
   if (
@@ -35,19 +57,35 @@ export async function PUT(
   }
 
   const categoryObj = await prisma.category.upsert({
-    where: { name: category },
+    where: {
+      name_userId: {
+        name: category,
+        userId,
+      },
+    },
     update: {},
-    create: { name: category },
+    create: {
+      name: category,
+      userId,
+    },
   });
 
   const brandObj = await prisma.brand.upsert({
-    where: { name: brand },
+    where: {
+      name_userId: {
+        name: brand,
+        userId,
+      },
+    },
     update: {},
-    create: { name: brand },
+    create: {
+      name: brand,
+      userId,
+    },
   });
 
-  const updated = await prisma.product.update({
-    where: { id },
+  const updated = await prisma.product.updateMany({
+    where: { id: productId, userId },
     data: {
       name,
       size,
@@ -58,27 +96,55 @@ export async function PUT(
     },
   });
 
-  return NextResponse.json(updated);
+  if (updated.count === 0) {
+    return NextResponse.json(
+      { error: "Produto não encontrado ou não autorizado" },
+      { status: 404 }
+    );
+  }
+
+  // Busca o produto atualizado para retornar
+  const product = await prisma.product.findFirst({
+    where: { id: productId, userId },
+  });
+
+  return NextResponse.json(product);
 }
 
 export async function DELETE(
   _req: NextRequest,
-  context: any
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const id = parseInt(context.params.id, 10);
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+  }
 
-    if (isNaN(id)) {
+  try {
+    const { id } = await params;
+    const productId = parseInt(id, 10);
+
+    if (isNaN(productId)) {
       return NextResponse.json({ error: "ID inválido" }, { status: 400 });
     }
 
-    await prisma.product.delete({
-      where: { id },
+    const deleted = await prisma.product.deleteMany({
+      where: { id: productId, userId },
     });
+
+    if (deleted.count === 0) {
+      return NextResponse.json(
+        { error: "Produto não encontrado ou não autorizado" },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Erro ao deletar produto:", error);
-    return NextResponse.json({ error: "Erro ao deletar item" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erro ao deletar item" },
+      { status: 500 }
+    );
   }
 }
