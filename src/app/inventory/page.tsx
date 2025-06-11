@@ -67,6 +67,7 @@ export default function InventoryPage() {
       category: product.category?.name ?? "Sem categoria",
       brandId: product.brand?.id ?? 0,
       brand: product.brand?.name ?? "Sem marca",
+      userId: product.userId,
     }));
   }, [products]);
 

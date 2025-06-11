@@ -6,9 +6,18 @@ import TopProductsCard from "@/components/TopProducts";
 import { topProducts } from "@/mocks/top-products";
 import { Product } from "@/types/product";
 import { getInventoryStats } from "@/helpers/DashboardStatsCards/inventoryStats";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
+  const { userId } = await auth();
+
+  if(!userId){
+    redirect("/sign-in")
+  }
+
   const productList = await prisma.product.findMany({
+    where: { userId },
     include: {
       category: true,
       brand: true,
@@ -26,6 +35,7 @@ export default async function DashboardPage() {
     brandId: product.brand.id,
     category: product.category.name,
     brand: product.brand.name,
+    userId: product.userId,
   }));
 
   const { totalProducts, lowStockCount, zeroStockCount, totalInventoryValue } =
