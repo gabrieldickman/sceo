@@ -13,10 +13,9 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   const linkStyle = (path: string) =>
-    `text-left p-5 rounded-md transition ${
-      pathname === path
-        ? "bg-[var(--green)] text-white font-bold"
-        : "text-[var(--gray)] hover:bg-[var(--gray-dark)]"
+    `text-left p-5 rounded-md transition ${pathname === path
+      ? "bg-[var(--green)] text-white font-bold"
+      : "text-[var(--gray)] hover:bg-[var(--gray-dark)]"
     }`;
 
   return (
@@ -35,6 +34,12 @@ export default function Sidebar() {
                   </Link>
                   <Link href={"/inventory"} className={linkStyle("/inventory")}>
                     <li>Inventário</li>
+                  </Link>
+                  <Link
+                    href={"/sales"}
+                    className={linkStyle("/sales")}
+                  >
+                    <li>Relatório de Vendas</li>
                   </Link>
                   <Link
                     href={"/transactions"}

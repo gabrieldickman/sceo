@@ -1,9 +1,10 @@
 export default function TransactionsPage() {
   return (
-    <div className="flex flex-row mt-10 ml-10">
-      <h1 className="text-5xl font-bold font-white">
-        Movimentações do Estoque
-      </h1>
+    <div className="w-full h-full flex flex-col">
+      <header className="flex w-full p-10 sm:items-center sm:gap-5">
+        <h1 className="text-5xl font-bold text-white">Movimentações do Estoque</h1>
+        <hr className="hidden sm:flex sm:flex-grow sm:border-b sm:border-[var(--gray)]" />
+      </header>
     </div>
   );
 }
