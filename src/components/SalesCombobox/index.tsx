@@ -51,39 +51,39 @@ export function SalesCombobox({
       name={name}
       control={control}
       render={({ field }) => (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-5">
           <label className="text-white text-2xl">{label}</label>
 
           <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
+            <PopoverTrigger asChild className="p-8 rounded-lg cursor-pointer">
               <Button
                 role="combobox"
-                className="w-full justify-between text-white bg-[var(--gray-dark)] border border-[var(--gray)]"
-              >
+                className="w-full justify-between text-white text-xl bg-[var(--gray-dark)] border border-[var(--gray)]"              >
                 {field.value
                   ? options.find((opt) => opt.id === field.value)?.name
                   : "Selecione um produto"}
-                <ChevronsUpDown className="ml-2 h-4 w-4" />
+                <ChevronsUpDown className="!w-6 !h-6" />
               </Button>
             </PopoverTrigger>
 
-            <PopoverContent className="bg-[var(--gray-dark)] w-full text-white">
-              <Command>
+            <PopoverContent className=" bg-[var(--gray-dark)] text-2xl w-110">
+              <Command className="bg-[var(--gray-dark)] text-white">
                 <CommandInput
                   value={search}
                   onValueChange={setSearch}
                   placeholder="Buscar produto..."
-                  className="text-white"
+                  className="text-white placeholder:text-white text-2xl"
                 />
-                <CommandEmpty>Nenhum produto encontrado.</CommandEmpty>
-                <CommandGroup>
+                <CommandEmpty className="flex items-center justify-between p-5 mb-5 text-white text-2xl">Nenhum produto encontrado.</CommandEmpty>
+                <CommandGroup className="bg-[var(--gray-dark)]">
                   {filtered.map((opt) => (
                     <CommandItem
+                      className="text-xl text-white mb-5 mt-5 cursor-pointer"
                       key={opt.id}
                       value={opt.name}
                       onSelect={() => {
                         field.onChange(opt.id);
-                        setValue("selectedProduct", opt); // salva o produto inteiro
+                        setValue("selectedProduct", opt);
                         setOpen(false);
                       }}
                     >

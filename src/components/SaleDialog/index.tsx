@@ -59,10 +59,13 @@ export default function SaleDialog({
   const selectedProduct = watch("selectedProduct");
 
   useEffect(() => {
-  if (!openDialog) {
-    reset();
-  }
-}, [openDialog, reset]);
+    if (!openDialog) {
+      reset({
+        quantity: 0,
+        totalPrice: 0,
+      });
+    }
+  }, [openDialog, reset]);
 
   useEffect(() => {
     if (selectedProduct && quantity) {
@@ -88,12 +91,15 @@ export default function SaleDialog({
 
   return (
     <Dialog open={openDialog} onOpenChange={closeDialog}>
-      <DialogContent className="bg-[var(--black-secondary)]">
+      <DialogContent className="bg-[var(--gray-dark)] flex flex-col gap-5 w-full h-auto border-0 p-10">
         <DialogHeader>
-          <DialogTitle>Nova Venda</DialogTitle>
+          <DialogTitle className="text-4xl font-bold text-white text-center">Nova Venda</DialogTitle>
+          <p className="text-center text-xl text-[var(--gray)]">
+            Registrar uma nova venda
+          </p>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-10">
           <SalesCombobox
             name="productId"
             label="Produto"
@@ -102,36 +108,40 @@ export default function SaleDialog({
             setValue={setValue}
           />
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-5">
             <Label className="text-white text-2xl">Quantidade</Label>
             <Input
+              className="w-full py-7 rounded-lg bg-[var(--gray-dark)] border border-[var(--gray)] text-white placeholder:text-xl placeholder:text-white !text-xl"
               type="number"
-              placeholder="Informe a quantidade..."
+              placeholder="Informe a quantidade:"
               {...register("quantity")}
-              className="text-white text-xl bg-[var(--gray-dark)] border border-[var(--gray)]"
             />
             {errors.quantity && (
               <span className="text-red-400">{errors.quantity.message}</span>
             )}
           </div>
 
-          <div className="flex flex-col gap-2">
+
+          <div className="flex flex-col gap-5">
             <Label className="text-white text-2xl">Valor total</Label>
-            <Input
-              type="number"
-              readOnly
-              {...register("totalPrice")}
-              className="text-white text-xl bg-[var(--gray-dark)] border border-[var(--gray)]"
-            />
+            <div className="flex flex-row gap-2 items-center">
+              <p>R$</p>
+              <Input
+                className="w-full py-7 rounded-lg bg-[var(--gray-dark)] border border-[var(--gray)] text-white !text-xl"
+                type="number"
+                readOnly
+                {...register("totalPrice")}
+              />
+            </div>
           </div>
 
           <footer className="pt-4">
             <Button
               type="submit"
               variant={"ghost"}
-              className="bg-[var(--green)] cursor-pointer"
+              className="w-full h-15 bg-[var(--green)] text-white text-2xl cursor-pointer"
             >
-              Salvar
+              Registrar Venda
             </Button>
           </footer>
         </form>
