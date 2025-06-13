@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import SaleDialog from "@/components/SaleDialog";
+import SalesList from "@/components/SalesList";
 
 export default function SalesPage() {
     const [saleDialogOpen, setSaleDialogOpen] = useState(false)
@@ -53,7 +54,7 @@ export default function SalesPage() {
                 </div>
 
                 <div className="h-full overflow-auto">
-
+                    <SalesList />
                 </div>
             </main>
         </div>
