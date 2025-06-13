@@ -153,7 +153,7 @@ export default function UpsertProductDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[var(--gray-dark)] flex flex-col gap-5 w-full h-auto border-0 p-10">
+      <DialogContent className="bg-[var(--gray-dark)] flex flex-col gap-2 w-full h-auto border-0 p-10">
         <DialogHeader>
           <DialogTitle className="text-4xl font-bold text-white text-center">
             {productIdToEdit ? "Editar Produto" : "Cadastrar Produto"}
@@ -165,7 +165,7 @@ export default function UpsertProductDialog({
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-10"
+          className="flex flex-col gap-5"
         >
           <div className="flex flex-col gap-5">
             <Label className="text-white text-2xl">Nome</Label>

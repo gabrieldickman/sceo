@@ -3,7 +3,6 @@ import NotificationsCard from "@/components/NotificationsCard";
 import InventoryTable from "@/components/InventoryTable";
 import { prisma } from "@/lib/prisma";
 import TopProductsCard from "@/components/TopProducts";
-import { topProducts } from "@/mocks/top-products";
 import { Product } from "@/types/product";
 import { getInventoryStats } from "@/helpers/DashboardStatsCards/inventoryStats";
 import { auth } from "@clerk/nextjs/server";
@@ -15,6 +14,14 @@ export default async function DashboardPage() {
   if(!userId){
     redirect("/sign-in")
   }
+
+  const sales = await prisma.sale.findMany({
+    where: { userId },
+    include: {
+      product: true,
+    },
+    orderBy: { saleDate: "desc" },
+  });
 
   const productList = await prisma.product.findMany({
     where: { userId },
@@ -74,7 +81,7 @@ export default async function DashboardPage() {
 
         <NotificationsCard />
 
-        {topProducts.length === 0 ? (
+        {sales.length === 0 ? (
           <Card className="bg-[var(--black-secondary)] rounded-xl border-[var(--gray)] overflow-y-auto h-120 xl:col-span-2">
             <CardContent className="h-full flex items-center justify-center text-white p-0">
               <div className="flex items-center justify-center h-full">
