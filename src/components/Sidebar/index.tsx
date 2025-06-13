@@ -90,6 +90,12 @@ export default function Sidebar() {
                       <li>Inventário</li>
                     </Link>
                     <Link
+                      href={"/sales"}
+                      className={linkStyle("/sales")}
+                    >
+                      <li>Relatório de Vendas</li>
+                    </Link>
+                    <Link
                       href={"/transactions"}
                       className={linkStyle("/transactions")}
                     >
