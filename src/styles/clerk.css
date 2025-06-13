@@ -130,6 +130,12 @@
   font-size: 1.2rem;
 }
 
+.cl-footerAction{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 /* ==== Avatar & User Button ==== */
 
 .cl-avatarBox {
@@ -150,4 +156,8 @@
   align-items: center;
   gap: 1rem;
   color: var(--gray-light);
+}
+
+.cl-internal-16vtwdp, .cl-internal-lk7758, .cl-internal-13u79ez, .cl-internal-piyvrh{
+  display: none;
 }
