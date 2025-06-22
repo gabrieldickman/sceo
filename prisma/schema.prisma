@@ -36,6 +36,8 @@ model Product {
   categoryId  Int
   brandId     Int
   userId      String    // ID do usuário do Clerk
+  isDeleted   Boolean   @default(false) // <- novo campo
+
 
   category Category @relation(fields: [categoryId], references: [id])
   brand    Brand    @relation(fields: [brandId], references: [id])
