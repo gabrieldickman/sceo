@@ -99,7 +99,7 @@ export async function GET() {
     }
 
     const products = await prisma.product.findMany({
-      where: { userId },
+      where: { userId, isDeleted: false, },
       orderBy: { name: "asc" },
       include: {
         category: true,

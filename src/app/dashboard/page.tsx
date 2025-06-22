@@ -43,6 +43,7 @@ export default async function DashboardPage() {
     category: product.category.name,
     brand: product.brand.name,
     userId: product.userId,
+    isDeleted: product.isDeleted,
   }));
 
   const { totalProducts, lowStockCount, zeroStockCount, totalInventoryValue } =
