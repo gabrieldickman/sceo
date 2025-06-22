@@ -9,4 +9,5 @@ export interface Product {
   quantity: number;
   price: number;
   userId: string;
+  isDeleted: boolean;
 }

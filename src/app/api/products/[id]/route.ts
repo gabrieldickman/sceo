@@ -22,7 +22,10 @@ export async function GET(
   });
 
   if (!product) {
-    return NextResponse.json({ error: "Produto não encontrado" }, { status: 404 });
+    return NextResponse.json(
+      { error: "Produto não encontrado" },
+      { status: 404 }
+    );
   }
 
   return NextResponse.json(product);
@@ -128,11 +131,12 @@ export async function DELETE(
       return NextResponse.json({ error: "ID inválido" }, { status: 400 });
     }
 
-    const deleted = await prisma.product.deleteMany({
+    const updated = await prisma.product.update({
       where: { id: productId, userId },
+      data: { isDeleted: true },
     });
-
-    if (deleted.count === 0) {
+    
+    if (!updated) {
       return NextResponse.json(
         { error: "Produto não encontrado ou não autorizado" },
         { status: 404 }

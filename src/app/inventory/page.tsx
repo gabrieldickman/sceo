@@ -64,6 +64,7 @@ export default function InventoryPage() {
       brandId: product.brand?.id ?? 0,
       brand: product.brand?.name ?? "Sem marca",
       userId: product.userId,
+      isDeleted: product.isDeleted,
     }));
   }, [products]);
 
