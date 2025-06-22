@@ -14,6 +14,7 @@ import { Pagination } from "../Pagination/Pagination";
 import { ExternalLink, Trash2 } from "lucide-react";
 import { getStatus } from "@/helpers/InventoryTableItemStatus/getStatus";
 import { Product } from "@/types/product";
+import { DeleteProductAlert } from "../DeleteProductAlert";
 
 type InventoryTableProps = {
   data: Product[];
@@ -59,14 +60,16 @@ function ActionsCell({
       >
         <ExternalLink className="!w-6 !h-6" />
       </Button>
-      <Button
-        variant="ghost"
-        className="bg-[var(--black-primary)] cursor-pointer w-auto h-auto"
-        aria-label="Deletar produto"
-        onClick={onDelete}
-      >
-        <Trash2 className="!w-6 !h-6" />
-      </Button>
+
+      <DeleteProductAlert onConfirm={onDelete}>
+        <Button
+          variant="ghost"
+          className="bg-[var(--black-primary)] cursor-pointer w-auto h-auto"
+          aria-label="Deletar produto"
+        >
+          <Trash2 className="!w-6 !h-6" />
+        </Button>
+      </DeleteProductAlert>
     </div>
   );
 }

@@ -44,17 +44,13 @@ export default function InventoryPage() {
   };
 
   const handleDelete = async (id: number) => {
-    const confirmed = window.confirm(
-      "Tem certeza que deseja excluir este produto?"
-    );
-    if (!confirmed) return;
+  await fetch(`/api/products/${id}`, {
+    method: "DELETE",
+  });
 
-    await fetch(`/api/products/${id}`, {
-      method: "DELETE",
-    });
+  fetchProducts();
+};
 
-    fetchProducts();
-  };
 
   const adaptedProducts = useMemo(() => {
     return products.map((product) => ({
