@@ -1,50 +1,104 @@
-# 📦SCEO — Sistema de Controle de Estoque Organizacional
-O SCEO é um sistema de controle de estoque desenvolvido para auxiliar pequenos negócios na organização de seus produtos, com foco em usabilidade, visual limpo e experiência do usuário.
+![image](https://your-image-link-aqui.com) <!-- Substitua por um print do sistema -->
 
-### Este projeto está em desenvolvimento e faz parte do meu portfólio como desenvolvedor web fullstack.
+# SCEO — Sistema de Controle de Estoque Online
 
-## 🚧 Status do Projeto
-- 🟡 Em desenvolvimento
-  - 🔹 Interface inicial pronta
-  - 🔹 Tabelas de inventário e dashboard com paginação
-  - 🔹 Responsividade aplicada
-  - 🔹 Filtro de busca funcional
-  - 🔹 Mocks utilizados para simular dados
-  - 🔜 Integração com banco de dados (NeonDB + Prisma)
-  - 🔜 Funcionalidades de criar, editar e deletar produtos
+## 📌 Introdução
 
-### 🛠️ Tecnologias Utilizadas
-- Next.js
-- TypeScript
-- Tailwind CSS
-- Clerk – Autenticação com Google
-- Prisma (em breve)
-- NeonDB (em breve)
+O **SCEO** é um sistema web de controle de estoque desenvolvido para facilitar o gerenciamento de produtos, vendas, marcas e categorias de forma rápida, intuitiva e segura.
 
-### 📷 Preview (em breve)
-Em breve adicionarei imagens ou um GIF mostrando o funcionamento da interface.
+Com ele, é possível cadastrar produtos, controlar o fluxo de vendas com atualização automática de estoque, além de organizar os itens por marca e categoria — tudo vinculado a usuários autenticados com o Clerk.
 
-## 💻 Como rodar o projeto
+### 🔐 Acesso Seguro
 
-### Clone o repositório
+O sistema utiliza autenticação via **Clerk**, garantindo que cada ação esteja associada a um usuário único e autorizado.
+
+---
+
+## ⚙️ Funcionalidades Principais
+
+- ✅ Cadastro, edição e exclusão de produtos  
+- ✅ Registro de vendas com atualização automática do estoque  
+- ✅ Associação de produtos com marcas e categorias  
+- ✅ Listagem e filtragem por usuário autenticado  
+- ✅ Autenticação com Clerk  
+- ✅ Interface moderna e responsiva  
+
+---
+
+## 🧩 Estrutura do Projeto
+
+/src
+├── /
+├── /
+├── /
+├── /
+├── /
+├── /
+└── /
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+- ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+- ![Next.js](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
+- ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+- ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+- ![Prisma](https://img.shields.io/badge/prisma-3982CE?style=for-the-badge&logo=prisma&logoColor=white)
+- ![Zod](https://img.shields.io/badge/zod-8E44AD?style=for-the-badge)
+- ![React Hook Form](https://img.shields.io/badge/react_hook_form-EC5990?style=for-the-badge&logo=reacthookform&logoColor=white)
+- ![Clerk](https://img.shields.io/badge/clerk-0A2540?style=for-the-badge&logo=clerk&logoColor=white)
+- ![Node.js](https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+- ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+- **ShadCN UI** — biblioteca de componentes moderna baseada no Radix UI
+
+---
+
+## 💡 Pré-requisitos
+
+- Node.js  
+- Git  
+- Uma IDE ou Editor de Código (ex: VSCode)  
+- Conta configurada no [Clerk](https://clerk.com/)  
+- Banco de dados PostgreSQL (Recomendado: [Neon](https://neon.tech))  
+
+---
+
+## 📦 Guia de Instalação
+
+1. **Clone o repositório**
+
 ```
 git clone https://github.com/gabrieldickman/sceo.git
 ```
 
-### Acesse a pasta
+2. **Instale as dependências**
+
 ```
 cd sceo
-```
-### Instale as dependências
-```
-npm install 
+npm install
 ```
 
-# Rode o projeto
+
+3. Execute o prisma
+
+```
+npx prisma generate
+```
+
+4. Inicie o servidor
+   
 ```
 npm run dev
 ```
-⚠️ A conexão com o banco de dados ainda não está configurada. Os dados exibidos atualmente são simulados (mocks).
+O projeto estará disponível em: http://localhost:3000
 
-### 📌 Objetivo
-Criar uma aplicação real que possa ser utilizada por pequenos empreendedores, e ao mesmo tempo consolidar meus conhecimentos em desenvolvimento web fullstack.
+---
+
+## 📝 Licença
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+© 2024 Gabriel Dickman. Todos os direitos reservados.
