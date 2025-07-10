@@ -27,14 +27,16 @@ O sistema utiliza autenticação via **Clerk**, garantindo que cada ação estej
 
 ## 🧩 Estrutura do Projeto
 
+```
 /src
-├── /
-├── /
-├── /
-├── /
-├── /
-├── /
-└── /
+├── /app # Páginas do Next.js (main page, layouts, not-found, globals) e rotas API
+├── /components # Componentes reutilizáveis da interface
+├── /helpers # Funções utilitárias diversas
+├── /hooks # Hooks React personalizados
+├── /lib # Configuração do Prisma e utilitários do Tailwind
+├── /styles # Estilos específicos dos componentes Clerk
+└── /types # Tipagens TypeScript do projeto
+```
 
 ---
 
@@ -79,7 +81,6 @@ cd sceo
 npm install
 ```
 
-
 3. Execute o prisma
 
 ```
@@ -95,10 +96,11 @@ O projeto estará disponível em: http://localhost:3000
 
 ---
 
-## 📝 Licença
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+## 📄 Direitos Autorais
 
 © 2024 Gabriel Dickman. Todos os direitos reservados.
+
+Este sistema foi idealizado, desenvolvido e mantido exclusivamente por Gabriel Dickman.  
+É proibido copiar, distribuir, modificar ou reutilizar qualquer parte deste projeto, no todo ou em partes, sem permissão expressa do autor.
+
+O uso indevido deste sistema ou de trechos do seu código sem autorização poderá resultar em sanções legais conforme a legislação vigente.
